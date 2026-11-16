@@ -67,3 +67,11 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
+## Decisiones
+
+### Identidad, versiones FIFA y usuarios
+
+**Decisión:** separar la identidad estable del jugador `PlayerIdentity` de sus datos variables por edición `PlayerVersion`. Crear también una entidad `User` para las cuentas de acceso.
+
+**Justificación:** un mismo jugador puede aparecer en varias ediciones FIFA con distinta edad, club, posición, rating y skills. Separar esos datos evita duplicar la identidad y permite consultar su evolución histórica. `User` permite implementar el login, almacenar el hash de la contraseña y proteger los endpoints mediante autenticación.
