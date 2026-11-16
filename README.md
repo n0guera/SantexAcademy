@@ -75,3 +75,9 @@ $ npm run start:prod
 **Decisión:** separar la identidad estable del jugador `PlayerIdentity` de sus datos variables por edición `PlayerVersion`. Crear también una entidad `User` para las cuentas de acceso.
 
 **Justificación:** un mismo jugador puede aparecer en varias ediciones FIFA con distinta edad, club, posición, rating y skills. Separar esos datos evita duplicar la identidad y permite consultar su evolución histórica. `User` permite implementar el login, almacenar el hash de la contraseña y proteger los endpoints mediante autenticación.
+
+### Autenticación con JWT, bcrypt y Passport
+
+**Decisión:** implementar autenticación mediante JWT usando Passport y `passport-jwt`. Las contraseñas se validan con `bcrypt` y un guard global protege todos los endpoints, excepto los marcados como públicos mediante `@Public()`.
+
+**Justificación:** JWT permite autenticar peticiones sin mantener sesiones en el servidor. Passport centraliza la estrategia de autenticación y facilita validar el token Bearer en cada solicitud. `bcrypt` evita almacenar contraseñas en texto plano. El guard global asegura que los nuevos endpoints queden protegidos por defecto, cumpliendo el requisito de que ningún endpoint devuelva datos sin autenticación.
