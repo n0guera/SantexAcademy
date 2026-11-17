@@ -81,3 +81,9 @@ $ npm run start:prod
 **Decisión:** implementar autenticación mediante JWT usando Passport y `passport-jwt`. Las contraseñas se validan con `bcrypt` y un guard global protege todos los endpoints, excepto los marcados como públicos mediante `@Public()`.
 
 **Justificación:** JWT permite autenticar peticiones sin mantener sesiones en el servidor. Passport centraliza la estrategia de autenticación y facilita validar el token Bearer en cada solicitud. `bcrypt` evita almacenar contraseñas en texto plano. El guard global asegura que los nuevos endpoints queden protegidos por defecto, cumpliendo el requisito de que ningún endpoint devuelva datos sin autenticación.
+
+### Registro de usuarios
+
+**Decisión:** crear usuarios mediante `POST /api/auth/register`. El endpoint valida el email y la contraseña, verifica que el email no exista, genera un hash con bcrypt y guarda el usuario en MySQL. Luego devuelve un JWT para iniciar la sesión automáticamente.
+
+**Justificación:** bcrypt evita almacenar contraseñas en texto plano y JWT permite autenticar las siguientes solicitudes.

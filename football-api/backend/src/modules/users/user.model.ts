@@ -8,13 +8,17 @@ import {
   Table,
   UpdatedAt,
 } from 'sequelize-typescript';
+import { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
 
 @Table({ tableName: 'users', timestamps: true })
-export class UserModel extends Model<UserModel> {
+export class UserModel extends Model<
+  InferAttributes<UserModel>,
+  InferCreationAttributes<UserModel>
+> {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-  declare id: number;
+  declare id: CreationOptional<number>;
 
   @Column({ type: DataType.STRING(255), allowNull: false, unique: true })
   declare email: string;
@@ -28,9 +32,9 @@ export class UserModel extends Model<UserModel> {
 
   @CreatedAt
   @Column(DataType.DATE)
-  declare createdAt: Date;
+  declare createdAt: CreationOptional<Date>;
 
   @UpdatedAt
   @Column(DataType.DATE)
-  declare updatedAt: Date;
+  declare updatedAt: CreationOptional<Date>;
 }
