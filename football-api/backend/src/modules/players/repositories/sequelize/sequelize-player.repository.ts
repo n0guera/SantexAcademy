@@ -1,8 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op, WhereOptions } from 'sequelize';
 import { PlayerModel } from './player.model'; // Sequelize model
-import { IPlayerRepository } from '../../interfaces/player-repository.interface';
+import {
+  IPlayerRepository,
+  PaginatedPlayers,
+} from '../../interfaces/player-repository.interface';
 import { Player } from '../../entities/player.entity';
+import { PlayerQueryDto } from '../../dto/player-query.dto';
+import { CreatePlayerDto } from '../../dto/create-player.dto';
+import { UpdatePlayerDto } from '../../dto/update-player.dto';
 
 @Injectable()
 export class SequelizePlayerRepository implements IPlayerRepository {
@@ -16,11 +23,122 @@ export class SequelizePlayerRepository implements IPlayerRepository {
     return playerList.map((x) => this.mapToEntity(x));
   }
 
+  async findPaginated(query: PlayerQueryDto): Promise<PaginatedPlayers> {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const where: WhereOptions = {};
+
+    if (query.name) {
+      where.longName = { [Op.like]: `%${query.name}%` };
+    }
+    if (query.club) {
+      where.clubName = { [Op.like]: `%${query.club}%` };
+    }
+    if (query.position) {
+      where.playerPositions = { [Op.like]: `%${query.position}%` };
+    }
+    if (query.nationality) {
+      where.nationalityName = { [Op.like]: `%${query.nationality}%` };
+    }
+    if (query.fifaVersion) {
+      where.fifaVersion = query.fifaVersion;
+    }
+    if (query.minRating !== undefined || query.maxRating !== undefined) {
+      where.overall = {
+        ...(query.minRating !== undefined ? { [Op.gte]: query.minRating } : {}),
+        ...(query.maxRating !== undefined ? { [Op.lte]: query.maxRating } : {}),
+      };
+    }
+
+    const allowedOrderFields: Record<string, string> = {
+      name: 'long_name',
+      club: 'club_name',
+      position: 'player_positions',
+      nationality: 'nationality_name',
+      rating: 'overall',
+      fifaVersion: 'fifa_version',
+    };
+    const orderField = query.orderBy
+      ? allowedOrderFields[query.orderBy]
+      : undefined;
+    const orderDirection = query.order === 'DESC' ? 'DESC' : 'ASC';
+
+    const result = await this.playerModel.findAndCountAll({
+      where,
+      limit,
+      offset: (page - 1) * limit,
+      ...(orderField ? { order: [[orderField, orderDirection]] } : {}),
+    });
+
+    return {
+      items: result.rows.map((model) => this.mapToEntity(model)),
+      total: result.count,
+      page,
+      limit,
+    };
+  }
+
   async findOneById(id: number): Promise<Player | undefined> {
     const model = await this.playerModel.findByPk(id);
     if (!model) {
       return undefined;
     }
+    return this.mapToEntity(model);
+  }
+
+  async create(dto: CreatePlayerDto): Promise<Player> {
+    const model = await this.playerModel.create({
+      fifaVersion: dto.fifaVersion ?? '23',
+      fifaUpdate: '2',
+      playerFaceUrl: '',
+      longName: dto.name,
+      playerPositions: dto.position,
+      clubName: dto.club,
+      nationalityName: dto.nationality,
+      overall: dto.rating,
+      potential: dto.rating,
+      age: 0,
+      pace: dto.speed,
+      shooting: dto.shooting,
+      passing: dto.passing,
+      dribbling: dto.dribbling,
+      defending: dto.defending,
+      physic: dto.physic,
+    });
+
+    return this.mapToEntity(model);
+  }
+
+  async update(
+    id: number,
+    dto: UpdatePlayerDto,
+  ): Promise<Player | undefined> {
+    const model = await this.playerModel.findByPk(id);
+    if (!model) {
+      return undefined;
+    }
+
+    await model.update({
+      ...(dto.name !== undefined ? { longName: dto.name } : {}),
+      ...(dto.club !== undefined ? { clubName: dto.club } : {}),
+      ...(dto.position !== undefined
+        ? { playerPositions: dto.position }
+        : {}),
+      ...(dto.nationality !== undefined
+        ? { nationalityName: dto.nationality }
+        : {}),
+      ...(dto.fifaVersion !== undefined
+        ? { fifaVersion: dto.fifaVersion }
+        : {}),
+      ...(dto.rating !== undefined ? { overall: dto.rating } : {}),
+      ...(dto.speed !== undefined ? { pace: dto.speed } : {}),
+      ...(dto.shooting !== undefined ? { shooting: dto.shooting } : {}),
+      ...(dto.passing !== undefined ? { passing: dto.passing } : {}),
+      ...(dto.dribbling !== undefined ? { dribbling: dto.dribbling } : {}),
+      ...(dto.defending !== undefined ? { defending: dto.defending } : {}),
+      ...(dto.physic !== undefined ? { physic: dto.physic } : {}),
+    });
+
     return this.mapToEntity(model);
   }
 

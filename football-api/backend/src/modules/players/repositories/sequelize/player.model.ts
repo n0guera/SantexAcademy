@@ -7,13 +7,21 @@ import {
   PrimaryKey,
   AutoIncrement,
 } from 'sequelize-typescript';
+import {
+  CreationOptional,
+  InferAttributes,
+  InferCreationAttributes,
+} from 'sequelize';
 
 @Table({ tableName: 'players', timestamps: false })
-export class PlayerModel extends Model<PlayerModel> {
+export class PlayerModel extends Model<
+  InferAttributes<PlayerModel>,
+  InferCreationAttributes<PlayerModel>
+> {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-  declare id: number;
+  declare id: CreationOptional<number>;
 
   @Column({ field: 'fifa_version', type: DataType.STRING })
   declare fifaVersion: string;
