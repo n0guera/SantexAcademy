@@ -87,3 +87,9 @@ $ npm run start:prod
 **Decisión:** crear usuarios mediante `POST /api/auth/register`. El endpoint valida el email y la contraseña, verifica que el email no exista, genera un hash con bcrypt y guarda el usuario en MySQL. Luego devuelve un JWT para iniciar la sesión automáticamente.
 
 **Justificación:** bcrypt evita almacenar contraseñas en texto plano y JWT permite autenticar las siguientes solicitudes.
+
+### Consulta, creación y edición de jugadores
+
+**Decisión:** DTOs de validación para consulta, creación y edición de jugadores.
+
+**Justificación:** Los DTOs separan los datos que recibe la API de las entidades internas y permiten validar las solicitudes antes de consultar o modificar la base. También ayudan a evitar campos no permitidos, validar rangos de rating y skills, y diferenciar claramente una consulta paginada de la creación o actualización parcial de un jugador.
