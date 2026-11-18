@@ -33,9 +33,8 @@ export class PlayersController {
   @HttpCode(HttpStatus.OK)
   async getPlayerById(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<PlayerDto | undefined> {
+  ): Promise<PlayerDto> {
     const player = await this.playersService.getPlayerById(id);
-    console.log(`Fetching player  ${player}`);
     if (!player) {
       throw new NotFoundException(`Player with ID ${id} not found.`);
     }
