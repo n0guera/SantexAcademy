@@ -13,7 +13,7 @@ export interface PaginatedPlayers {
 export interface IPlayerRepository {
   findAll(): Promise<Player[]>;
   findOneById(id: number): Promise<Player | undefined>;
-  findPaginated?(query: PlayerQueryDto): Promise<PaginatedPlayers>;
+  findPaginated(query: PlayerQueryDto): Promise<PaginatedPlayers>;
   create?(dto: CreatePlayerDto): Promise<Player>;
   update?(id: number, dto: UpdatePlayerDto): Promise<Player | undefined>;
 }

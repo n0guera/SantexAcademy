@@ -1,5 +1,9 @@
 import { Player } from '../../entities/player.entity';
-import { IPlayerRepository } from '../../interfaces/player-repository.interface';
+import {
+  IPlayerRepository,
+  PaginatedPlayers,
+} from '../../interfaces/player-repository.interface';
+import { PlayerQueryDto } from '../../dto/player-query.dto';
 
 export class InMemoryPlayerRepository implements IPlayerRepository {
   private players: Player[] = [];
@@ -10,5 +14,9 @@ export class InMemoryPlayerRepository implements IPlayerRepository {
 
   async findOneById(id: number): Promise<Player | undefined> {
     return Promise.resolve(this.players.find((p) => p.id === id));
+  }
+
+  async findPaginated(_query: PlayerQueryDto): Promise<PaginatedPlayers> {
+    throw new Error('Paginación no implementada en el repositorio en memoria');
   }
 }

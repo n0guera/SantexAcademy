@@ -93,3 +93,9 @@ $ npm run start:prod
 **Decisión:** DTOs de validación para consulta, creación y edición de jugadores.
 
 **Justificación:** Los DTOs separan los datos que recibe la API de las entidades internas y permiten validar las solicitudes antes de consultar o modificar la base. También ayudan a evitar campos no permitidos, validar rangos de rating y skills, y diferenciar claramente una consulta paginada de la creación o actualización parcial de un jugador.
+
+### Listado paginado y filtrado en el servidor
+
+**Decisión:** Implementar el listado paginado y filtrado en el servidor.
+
+**Justificación:** El backend ya posee el dataset plano y los filtros más costosos deben ejecutarse antes de enviar datos al navegador. Paginación y filtrado con Sequelize reducen la carga de memoria y transferencia, permiten reutilizar la consulta y preparan el listado para la exportación CSV posterior.

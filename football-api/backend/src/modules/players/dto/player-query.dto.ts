@@ -3,6 +3,7 @@ import {
   IsInt,
   IsOptional,
   IsString,
+  IsIn,
   Max,
   Min,
 } from 'class-validator';
@@ -64,6 +65,6 @@ export class PlayerQueryDto {
   orderBy?: string;
 
   @IsOptional()
-  @IsString()
+  @IsIn(['ASC', 'DESC'])
   order?: 'ASC' | 'DESC';
 }
