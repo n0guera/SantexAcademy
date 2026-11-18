@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Header,
   HttpCode,
   HttpStatus,
   NotFoundException,
@@ -32,6 +33,14 @@ export class PlayersController {
       page: result.page,
       limit: result.limit,
     };
+  }
+
+  @Get('export')
+  @Header('Content-Type', 'text/csv; charset=utf-8')
+  @Header('Content-Disposition', 'attachment; filename="players.csv"')
+  @HttpCode(HttpStatus.OK)
+  async exportPlayers(@Query() query: PlayerQueryDto) {
+    return this.playersService.exportPlayers(query);
   }
 
   @Get(':id')

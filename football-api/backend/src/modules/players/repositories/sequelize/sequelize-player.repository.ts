@@ -26,48 +26,13 @@ export class SequelizePlayerRepository implements IPlayerRepository {
   async findPaginated(query: PlayerQueryDto): Promise<PaginatedPlayers> {
     const page = query.page ?? 1;
     const limit = query.limit ?? 10;
-    const where: WhereOptions = {};
-
-    if (query.name) {
-      where.longName = { [Op.like]: `%${query.name}%` };
-    }
-    if (query.club) {
-      where.clubName = { [Op.like]: `%${query.club}%` };
-    }
-    if (query.position) {
-      where.playerPositions = { [Op.like]: `%${query.position}%` };
-    }
-    if (query.nationality) {
-      where.nationalityName = { [Op.like]: `%${query.nationality}%` };
-    }
-    if (query.fifaVersion) {
-      where.fifaVersion = query.fifaVersion;
-    }
-    if (query.minRating !== undefined || query.maxRating !== undefined) {
-      where.overall = {
-        ...(query.minRating !== undefined ? { [Op.gte]: query.minRating } : {}),
-        ...(query.maxRating !== undefined ? { [Op.lte]: query.maxRating } : {}),
-      };
-    }
-
-    const allowedOrderFields: Record<string, string> = {
-      name: 'long_name',
-      club: 'club_name',
-      position: 'player_positions',
-      nationality: 'nationality_name',
-      rating: 'overall',
-      fifaVersion: 'fifa_version',
-    };
-    const orderField = query.orderBy
-      ? allowedOrderFields[query.orderBy]
-      : undefined;
-    const orderDirection = query.order === 'DESC' ? 'DESC' : 'ASC';
+    const { where, order } = this.buildQueryOptions(query);
 
     const result = await this.playerModel.findAndCountAll({
       where,
       limit,
       offset: (page - 1) * limit,
-      ...(orderField ? { order: [[orderField, orderDirection]] } : {}),
+      ...(order ? { order } : {}),
     });
 
     return {
@@ -76,6 +41,20 @@ export class SequelizePlayerRepository implements IPlayerRepository {
       page,
       limit,
     };
+  }
+
+  async findForExport(
+    query: PlayerQueryDto,
+    limit: number,
+  ): Promise<Player[]> {
+    const { where, order } = this.buildQueryOptions(query);
+    const playerList = await this.playerModel.findAll({
+      where,
+      limit,
+      ...(order ? { order } : {}),
+    });
+
+    return playerList.map((model) => this.mapToEntity(model));
   }
 
   async findOneById(id: number): Promise<Player | undefined> {
@@ -140,6 +119,58 @@ export class SequelizePlayerRepository implements IPlayerRepository {
     });
 
     return this.mapToEntity(model);
+  }
+
+  private buildQueryOptions(query: PlayerQueryDto): {
+    where: WhereOptions;
+    order?: [string, 'ASC' | 'DESC'][];
+  } {
+    const where: WhereOptions = {};
+
+    if (query.name) {
+      where.longName = { [Op.like]: `%${query.name}%` };
+    }
+    if (query.club) {
+      where.clubName = { [Op.like]: `%${query.club}%` };
+    }
+    if (query.position) {
+      where.playerPositions = { [Op.like]: `%${query.position}%` };
+    }
+    if (query.nationality) {
+      where.nationalityName = { [Op.like]: `%${query.nationality}%` };
+    }
+    if (query.fifaVersion) {
+      where.fifaVersion = query.fifaVersion;
+    }
+    if (query.minRating !== undefined || query.maxRating !== undefined) {
+      where.overall = {
+        ...(query.minRating !== undefined ? { [Op.gte]: query.minRating } : {}),
+        ...(query.maxRating !== undefined ? { [Op.lte]: query.maxRating } : {}),
+      };
+    }
+
+    const allowedOrderFields: Record<string, string> = {
+      name: 'long_name',
+      club: 'club_name',
+      position: 'player_positions',
+      nationality: 'nationality_name',
+      rating: 'overall',
+      fifaVersion: 'fifa_version',
+    };
+    const orderField = query.orderBy
+      ? allowedOrderFields[query.orderBy]
+      : undefined;
+
+    return {
+      where,
+      ...(orderField
+        ? {
+            order: [
+              [orderField, query.order === 'DESC' ? 'DESC' : 'ASC'],
+            ],
+          }
+        : {}),
+    };
   }
 
   private mapToEntity(model: PlayerModel): Player {

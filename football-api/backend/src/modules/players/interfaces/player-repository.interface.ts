@@ -14,6 +14,7 @@ export interface IPlayerRepository {
   findAll(): Promise<Player[]>;
   findOneById(id: number): Promise<Player | undefined>;
   findPaginated(query: PlayerQueryDto): Promise<PaginatedPlayers>;
+  findForExport?(query: PlayerQueryDto, limit: number): Promise<Player[]>;
   create?(dto: CreatePlayerDto): Promise<Player>;
   update?(id: number, dto: UpdatePlayerDto): Promise<Player | undefined>;
 }

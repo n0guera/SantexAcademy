@@ -99,3 +99,9 @@ $ npm run start:prod
 **Decisión:** Implementar el listado paginado y filtrado en el servidor.
 
 **Justificación:** El backend ya posee el dataset plano y los filtros más costosos deben ejecutarse antes de enviar datos al navegador. Paginación y filtrado con Sequelize reducen la carga de memoria y transferencia, permiten reutilizar la consulta y preparan el listado para la exportación CSV posterior.
+
+### Exportacion CSV
+
+**Decisión:** Generar el CSV directamente en el backend reutilizando la consulta filtrada del listado.
+
+**Justificación:** Esto evita duplicar la lógica de filtros entre frontend y backend y garantiza que la exportación coincida con los resultados mostrados. El límite de 10.000 filas evita cargas excesivas y mantiene la solución simple, sin agregar otra dependencia.
