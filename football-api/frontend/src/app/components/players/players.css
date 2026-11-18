@@ -1,0 +1,14 @@
+.table {
+  --bs-table-bg: #182235;
+}
+
+:host .form-label,
+:host legend {
+  color: #f8f9fa;
+  opacity: 1;
+}
+
+:host .form-control::placeholder {
+  color: #aab4c3;
+  opacity: 1;
+}

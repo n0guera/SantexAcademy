@@ -174,7 +174,6 @@ export class SequelizePlayerRepository implements IPlayerRepository {
   }
 
   private mapToEntity(model: PlayerModel): Player {
-    console.log('Mapping PlayerModel to Player entity:', model);
     if (!model) {
       throw new Error('Attempted to map null model to Player entity');
     }

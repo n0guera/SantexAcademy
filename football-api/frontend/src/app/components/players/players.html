@@ -1,0 +1,88 @@
+<main class="container-fluid py-4">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h1 class="h3 mb-1">Jugadores</h1>
+      <p class="text-secondary mb-0">{{ total }} resultados</p>
+    </div>
+    <button class="btn btn-outline-primary" type="button" [disabled]="isDownloading" (click)="downloadCsv()">
+      {{ isDownloading ? 'Descargando...' : 'Descargar CSV' }}
+    </button>
+  </div>
+
+  <form class="card bg-dark border-secondary mb-4" [formGroup]="filters" (ngSubmit)="applyFilters()">
+    <div class="card-body">
+      <fieldset>
+        <legend class="h6 mb-3 text-light">Filtros</legend>
+      <div class="row g-3">
+        <div class="col-12 col-md-6 col-lg-3">
+          <label class="form-label text-light" for="name">Nombre</label>
+          <input id="name" class="form-control" formControlName="name" placeholder="Ej. Lionel Messi" />
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <label class="form-label text-light" for="club">Club</label>
+          <input id="club" class="form-control" formControlName="club" placeholder="Ej. FC Barcelona" />
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <label class="form-label text-light" for="position">Posición</label>
+          <input id="position" class="form-control" formControlName="position" placeholder="Ej. ST" />
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+          <label class="form-label text-light" for="nationality">Nacionalidad</label>
+          <input id="nationality" class="form-control" formControlName="nationality" placeholder="Ej. Argentina" />
+        </div>
+        <div class="col-6 col-md-3">
+          <label class="form-label text-light" for="minRating">Rating mínimo</label>
+          <input id="minRating" type="number" min="0" max="100" class="form-control" formControlName="minRating" placeholder="0" />
+        </div>
+        <div class="col-6 col-md-3">
+          <label class="form-label text-light" for="maxRating">Rating máximo</label>
+          <input id="maxRating" type="number" min="0" max="100" class="form-control" formControlName="maxRating" placeholder="100" />
+        </div>
+        <div class="col-12 col-md-6 d-flex align-items-end gap-2">
+          <button class="btn btn-primary" type="submit">Filtrar</button>
+          <button class="btn btn-outline-secondary" type="button" (click)="clearFilters()">Limpiar</button>
+        </div>
+      </div>
+      </fieldset>
+    </div>
+  </form>
+
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+
+  <div class="card bg-dark border-secondary">
+    <div class="table-responsive">
+      <table class="table table-dark table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Club</th>
+            <th>Posición</th>
+            <th>Nacionalidad</th>
+            <th class="text-end">Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="isLoading">
+            <td colspan="5" class="text-center py-4">Cargando jugadores...</td>
+          </tr>
+          <tr *ngIf="!isLoading && players.length === 0">
+            <td colspan="5" class="text-center py-4 text-secondary">No se encontraron jugadores.</td>
+          </tr>
+          <tr *ngFor="let player of players">
+            <td><a class="link-primary" [routerLink]="['/players', player.id]">{{ player.name }}</a></td>
+            <td>{{ player.club }}</td>
+            <td>{{ player.position }}</td>
+            <td>{{ player.nationality }}</td>
+            <td class="text-end">{{ player.rating }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <nav class="d-flex justify-content-center align-items-center gap-3 mt-4" aria-label="Paginación">
+    <button class="btn btn-outline-primary" type="button" [disabled]="page <= 1 || isLoading" (click)="changePage(page - 1)">Anterior</button>
+    <span>Página {{ page }} de {{ totalPages }}</span>
+    <button class="btn btn-outline-primary" type="button" [disabled]="page >= totalPages || isLoading" (click)="changePage(page + 1)">Siguiente</button>
+  </nav>
+</main>

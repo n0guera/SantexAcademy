@@ -1,15 +1,19 @@
-<!-- src/app/components/player/player.html -->
-<div class="player-container">
-  <h1>Detalles del Jugador</h1>
-  <p>Selecciona un jugador para ver sus detalles.</p>
-<div *ngIf="player; else noPlayer">
-  <h2>{{ player.name }}</h2>
-  <p>Club: {{ player.club }}</p>
-  <p>Posición: {{ player.position }}</p>
-  <p>Nacionalidad: {{ player.nationality }}</p>
-  <p>Rating: {{ player.rating }}</p>
-</div>
+<main class="container py-4">
+  <a class="btn btn-outline-secondary mb-3" routerLink="/players">Volver al listado</a>
 
-<ng-template #noPlayer>
-  <p>{{ errorMessage || 'Cargando jugador...' }}</p>
-</ng-template>
+  <div *ngIf="isLoading" class="text-secondary">Cargando jugador...</div>
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+
+  <section *ngIf="player" class="card bg-dark border-primary">
+    <div class="card-body">
+      <h1 class="h3 text-primary">{{ player.name }}</h1>
+      <p class="text-secondary mb-4">Detalle del jugador #{{ player.id }}</p>
+      <dl class="row mb-0">
+        <dt class="col-sm-3">Club</dt><dd class="col-sm-9">{{ player.club }}</dd>
+        <dt class="col-sm-3">Posición</dt><dd class="col-sm-9">{{ player.position }}</dd>
+        <dt class="col-sm-3">Nacionalidad</dt><dd class="col-sm-9">{{ player.nationality }}</dd>
+        <dt class="col-sm-3">Rating</dt><dd class="col-sm-9">{{ player.rating }}</dd>
+      </dl>
+    </div>
+  </section>
+</main>

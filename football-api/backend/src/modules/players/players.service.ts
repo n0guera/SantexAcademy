@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -57,14 +56,8 @@ export class PlayersService {
 
     const players = await this.playerRepository.findForExport(
       query,
-      MAX_EXPORT_ROWS + 1,
+      MAX_EXPORT_ROWS,
     );
-
-    if (players.length > MAX_EXPORT_ROWS) {
-      throw new BadRequestException(
-        `La exportación no puede superar las ${MAX_EXPORT_ROWS} filas`,
-      );
-    }
 
     const headers = [
       'id',
