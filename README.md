@@ -105,3 +105,9 @@ $ npm run start:prod
 **Decisión:** Generar el CSV directamente en el backend reutilizando la consulta filtrada del listado.
 
 **Justificación:** Esto evita duplicar la lógica de filtros entre frontend y backend y garantiza que la exportación coincida con los resultados mostrados. El límite de 10.000 filas evita cargas excesivas y mantiene la solución simple, sin agregar otra dependencia.
+
+### Frontend con Bootstrap y usuario de prueba
+
+**Decisión:** implementar el primer flujo del frontend con componentes de Angular, Reactive Forms, Bootstrap y un tema oscuro con acentos azules. El login usa el usuario seed `usuario@prueba.com` con contraseña `prueba123`, y luego redirige al listado protegido de jugadores.
+
+**Justificación:** Bootstrap es la herramienta visual trabajada en el curso y permite resolver una interfaz simple, sin agregar una librería de componentes compleja. El interceptor agrega el JWT a las solicitudes, mientras que el guard mejora la navegación, la protección real continúa estando en el guard global del backend. El usuario test permite probar el flujo desde cero sin depender de un registro manual.
