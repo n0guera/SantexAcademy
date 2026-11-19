@@ -36,6 +36,18 @@ export interface PaginatedPlayers {
   limit: number;
 }
 
+export interface PlayerFormData {
+  name: string;
+  club: string;
+  position: string;
+  nationality: string;
+  rating: number;
+  speed: number;
+  shooting: number;
+  passing: number;
+  dribbling: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -73,5 +85,13 @@ export class PlayerService {
       params,
       responseType: 'text',
     });
+  }
+
+  createPlayer(player: PlayerFormData): Observable<Player> {
+    return this.http.post<Player>(this.baseUrl, player);
+  }
+
+  updatePlayer(id: number, player: PlayerFormData): Observable<Player> {
+    return this.http.patch<Player>(`${this.baseUrl}/${id}`, player);
   }
 }

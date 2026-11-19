@@ -1,3 +1,9 @@
 .table {
   --bs-table-bg: #182235;
 }
+
+:host dl,
+:host dt,
+:host dd {
+  color: #f8f9fa;
+}

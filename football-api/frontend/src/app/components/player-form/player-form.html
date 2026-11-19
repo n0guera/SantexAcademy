@@ -1,0 +1,44 @@
+<main class="container py-4">
+  <a class="btn btn-outline-secondary mb-3" routerLink="/players">Volver al listado</a>
+
+  <section class="card bg-dark border-secondary">
+    <div class="card-body p-4">
+      <h1 class="h3 text-primary mb-4">{{ playerId ? 'Editar jugador' : 'Crear jugador' }}</h1>
+
+      <div *ngIf="errorMessage" class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="alert alert-success" role="status">{{ successMessage }}</div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <label class="form-label text-light" for="name">Nombre</label>
+            <input id="name" class="form-control" formControlName="name" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label text-light" for="club">Club</label>
+            <input id="club" class="form-control" formControlName="club" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label text-light" for="position">Posición</label>
+            <input id="position" class="form-control" formControlName="position" />
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label text-light" for="nationality">Nacionalidad</label>
+            <input id="nationality" class="form-control" formControlName="nationality" />
+          </div>
+
+          <div class="col-6 col-md-4" *ngFor="let field of [
+            'rating','speed','shooting','passing','dribbling'
+          ]">
+            <label class="form-label text-light" [for]="field">{{ field | titlecase }}</label>
+            <input [id]="field" type="number" min="0" max="100" class="form-control" [formControlName]="field" />
+          </div>
+        </div>
+
+        <button class="btn btn-primary mt-4" type="submit" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </form>
+    </div>
+  </section>
+</main>

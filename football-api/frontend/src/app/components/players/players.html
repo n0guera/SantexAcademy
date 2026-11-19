@@ -4,9 +4,12 @@
       <h1 class="h3 mb-1">Jugadores</h1>
       <p class="text-secondary mb-0">{{ total }} resultados</p>
     </div>
-    <button class="btn btn-outline-primary" type="button" [disabled]="isDownloading" (click)="downloadCsv()">
-      {{ isDownloading ? 'Descargando...' : 'Descargar CSV' }}
-    </button>
+    <div class="d-flex gap-2">
+      <a class="btn btn-primary" routerLink="/players/new">Crear jugador</a>
+      <button class="btn btn-outline-primary" type="button" [disabled]="isDownloading" (click)="downloadCsv()">
+        {{ isDownloading ? 'Descargando...' : 'Descargar CSV' }}
+      </button>
+    </div>
   </div>
 
   <form class="card bg-dark border-secondary mb-4" [formGroup]="filters" (ngSubmit)="applyFilters()">
