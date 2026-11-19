@@ -49,62 +49,91 @@ Para detener los contenedores sin eliminar los datos:
 docker compose down
 ```
 
-## Alternativa
-Aca las instruciones para correr cada servicio por separado
+## Alternativa: ejecutar sin Docker
 
-### Reiniciar los datos
+Para ejecutar la aplicación localmente, se necesita tener:
 
-``` bash
-docker compose down -v # Elimina los contenedores y el volumen db_data
-docker compose up -d --build # Reconstruye todo y ejecuta init.sql
-```
+- Node.js y npm.
+- Angular CLI instalado por npm o disponible mediante `npx`.
+- MySQL activo en Laragon, XAMPP u otra instalación local.
+- Una base de datos llamada `football_db`.
 
-`down -v` elimina la base de datos persistida. Usalo cuando quieras recrear MySQL desde `init.sql` y volver a cargar el usuario de prueba y el dataset.
+### 1. Configurar el backend
 
-### Conectarse a MySQL desde el Terminal / Consola
-
-```bash
-mysql -h 127.0.0.1 -P 3306 --user=football_api --password=password football_db
-```
+Desde la carpeta `football-api`, copiar el archivo de entorno a `backend/`:
 
 ```bash
-mysql> SHOW TABLES;
+cp .env.sample backend/.env
 ```
 
-```bash
-mysql> SELECT * FROM users;
+En Windows PowerShell:
+
+```powershell
+Copy-Item .env.sample backend/.env
 ```
 
-```bash
-mysql> exit;
+Luego editar `backend/.env` con los datos de MySQL local. Si Laragon usa el usuario `root` sin contraseña:
+
+```env
+MYSQL_ROOT_PASSWORD=root
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=football_db
+DB_USER=root
+DB_PASSWORD=
+
+JWT_SECRET=claveSecretaQueSoloElServerConoce
+JWT_EXPIRES_IN=1h
 ```
 
-### Inicializar API
+`DB_PASSWORD=` se usa cuando MySQL no tiene contraseña. Si el usuario local tiene contraseña, escribirla después del igual.
+
+Para cargar el dataset y el usuario de prueba por primera vez, importar [`docker/db/init.sql`](football-api/docker/db/init.sql) en la base `football_db` mediante phpMyAdmin o la consola de MySQL. Luego ejecutar:
 
 ```bash
 cd backend
 npm install
-```
-
-### Compilar y correr el BackEnd
-
-```bash
-# development
-npm run start
-
-# watch mode
 npm run start:dev
-
-# production mode
-npm run start:prod
 ```
 
-### Inicializar Frontend
+El backend quedará disponible en `http://localhost:3000`.
+
+### 2. Configurar el frontend
+
+El frontend no necesita copiar el `.env`. Las solicitudes apuntan directamente a `http://localhost:3000/api`, por lo que el backend debe ejecutarse en ese puerto.
+
+Desde otra terminal, ubicada en la raíz de `football-api`:
 
 ```bash
 cd frontend
 npm install
 npm start -- --host 0.0.0.0
+```
+
+El frontend quedará disponible en `http://localhost:4200`.
+
+Usuario de prueba:
+
+```text
+Email: usuario@prueba.com
+Password: prueba123
+```
+
+### Conectarse a MySQL sin Docker
+
+Para una configuración local con usuario `root` y sin contraseña:
+
+```bash
+mysql -h 127.0.0.1 -P 3306 --user=root football_db
+```
+
+Luego:
+
+```bash
+mysql> SHOW TABLES;
+mysql> SELECT * FROM users;
+mysql> exit;
 ```
 
 ## Decisiones
