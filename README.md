@@ -12,14 +12,42 @@
     ```bash
     cd football-api
    ```
-4. Copiar las variable de entorno del archivo de ejemplo al de ambiente
-    ```bash
-    cp .env.sample .env
-   ```
-5. Levantar todo con: 
+4. Copiar las variables de entorno del archivo de ejemplo al archivo de ambiente:
    ```bash
-    docker compose up
+   cp .env.sample .env
    ```
+   En Windows PowerShell también puede usarse:
+   ```powershell
+   Copy-Item .env.sample .env
+   ```
+5. Levantar todo desde la carpeta `football-api`:
+   ```bash
+   docker compose up -d --build
+   ```
+
+| Servicio | URL |
+|----------|-----|
+| Frontend | http://localhost:4200 |
+| API | http://localhost:3000 |
+
+Usuario de prueba:
+
+```text
+Email: usuario@prueba.com
+Password: prueba123
+```
+
+Para ver los logs de los contenedores:
+
+```bash
+docker compose logs -f
+```
+
+Para detener los contenedores sin eliminar los datos:
+
+```bash
+docker compose down
+```
 
 ## Alternativa
 Aca las instruciones para correr cada servicio por separado
@@ -27,9 +55,11 @@ Aca las instruciones para correr cada servicio por separado
 ### Reiniciar los datos
 
 ``` bash
-docker compose down -v # Esto detiene los contenedores y elimina los volúmenes (incluido db_data)
-docker compose up -d   # Esto vuelve a crear todo desde cero, ejecutando init.sql
+docker compose down -v # Elimina los contenedores y el volumen db_data
+docker compose up -d --build # Reconstruye todo y ejecuta init.sql
 ```
+
+`down -v` elimina la base de datos persistida. Usalo cuando quieras recrear MySQL desde `init.sql` y volver a cargar el usuario de prueba y el dataset.
 
 ### Conectarse a MySQL desde el Terminal / Consola
 
@@ -52,20 +82,29 @@ mysql> exit;
 ### Inicializar API
 
 ```bash
-$ npm install
+cd backend
+npm install
 ```
 
 ### Compilar y correr el BackEnd
 
 ```bash
 # development
-$ npm run start
+npm run start
 
 # watch mode
-$ npm run start:dev
+npm run start:dev
 
 # production mode
-$ npm run start:prod
+npm run start:prod
+```
+
+### Inicializar Frontend
+
+```bash
+cd frontend
+npm install
+npm start -- --host 0.0.0.0
 ```
 
 ## Decisiones
