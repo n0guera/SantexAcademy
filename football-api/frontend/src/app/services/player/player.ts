@@ -14,6 +14,7 @@ export interface Player {
   shooting: number;
   dribbling: number;
   passing: number;
+  physic: number;
 }
 
 export interface PlayerQuery {
@@ -46,6 +47,7 @@ export interface PlayerFormData {
   shooting: number;
   passing: number;
   dribbling: number;
+  physic: number;
 }
 
 @Injectable({

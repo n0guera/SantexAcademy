@@ -28,7 +28,7 @@
           </div>
 
           <div class="col-6 col-md-4" *ngFor="let field of [
-            'rating','speed','shooting','passing','dribbling'
+            'rating','speed','shooting','passing','dribbling','physic'
           ]">
             <label class="form-label text-light" [for]="field">{{ field | titlecase }}</label>
             <input [id]="field" type="number" min="0" max="100" class="form-control" [formControlName]="field" />

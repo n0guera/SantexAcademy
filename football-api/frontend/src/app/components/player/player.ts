@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Chart } from 'chart.js/auto';
 import { Player, PlayerService } from '../../services/player/player';
@@ -11,7 +11,7 @@ import { Player, PlayerService } from '../../services/player/player';
   templateUrl: './player.html',
   styleUrls: ['./player.css'],
 })
-export class PlayerComponent implements OnInit {
+export class PlayerComponent implements OnInit, OnDestroy {
   @ViewChild('skillsChart') skillsChart?: ElementRef<HTMLCanvasElement>;
   player?: Player;
   private chart?: Chart;
@@ -35,13 +35,17 @@ export class PlayerComponent implements OnInit {
       next: (player) => {
         this.player = player;
         this.isLoading = false;
-        setTimeout(() => this.renderSkillsChart(), 0);
+        requestAnimationFrame(() => this.renderSkillsChart());
       },
       error: () => {
         this.errorMessage = 'No se pudo cargar el jugador.';
         this.isLoading = false;
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.chart?.destroy();
   }
 
   private renderSkillsChart(): void {
@@ -53,7 +57,7 @@ export class PlayerComponent implements OnInit {
     this.chart = new Chart(this.skillsChart.nativeElement, {
       type: 'radar',
       data: {
-        labels: ['Ritmo', 'Tiro', 'Pases', 'Regate', 'Rating'],
+        labels: ['Ritmo', 'Tiro', 'Pases', 'Regate', 'Físico'],
         datasets: [{
           label: this.player.name,
           data: [
@@ -61,15 +65,20 @@ export class PlayerComponent implements OnInit {
             this.player.shooting,
             this.player.passing,
             this.player.dribbling,
-            this.player.rating,
+            this.player.physic,
           ],
           backgroundColor: 'rgba(13, 110, 253, 0.25)',
           borderColor: '#0d6efd',
+          borderWidth: 3,
           pointBackgroundColor: '#0d6efd',
+          pointBorderColor: '#f8f9fa',
+          pointBorderWidth: 2,
+          pointRadius: 4,
         }],
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         scales: {
           r: {
             beginAtZero: true,

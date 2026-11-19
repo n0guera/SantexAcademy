@@ -22,6 +22,7 @@ export class PlayerFormComponent implements OnInit {
     shooting: [50, [Validators.required, Validators.min(0), Validators.max(100)]],
     passing: [50, [Validators.required, Validators.min(0), Validators.max(100)]],
     dribbling: [50, [Validators.required, Validators.min(0), Validators.max(100)]],
+    physic: [50, [Validators.required, Validators.min(0), Validators.max(100)]],
   });
 
   playerId: number | null = null;
