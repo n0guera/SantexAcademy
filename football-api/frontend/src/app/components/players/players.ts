@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
 import {
   PaginatedPlayers,
   Player,
@@ -37,7 +38,16 @@ export class PlayersComponent implements OnInit {
     maxRating: null as number | null,
   });
 
-  constructor(private readonly playerService: PlayerService) {}
+  constructor(
+    private readonly playerService: PlayerService,
+    private readonly authService: AuthService,
+    private readonly router: Router,
+  ) {}
+
+  logout(): void {
+    this.authService.logout();
+    void this.router.navigate(['/login']);
+  }
 
   ngOnInit(): void {
     this.loadPlayers();

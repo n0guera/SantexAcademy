@@ -11,6 +11,11 @@ interface LoginRequest {
   password: string;
 }
 
+interface AuthRequest {
+  email: string;
+  password: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly apiUrl = 'http://localhost:3000/api/auth';
@@ -21,6 +26,12 @@ export class AuthService {
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(`${this.apiUrl}/login`, credentials)
+      .pipe(tap(({ accessToken }) => localStorage.setItem(this.tokenKey, accessToken)));
+  }
+
+  register(credentials: AuthRequest): Observable<LoginResponse> {
+    return this.http
+      .post<LoginResponse>(`${this.apiUrl}/register`, credentials)
       .pipe(tap(({ accessToken }) => localStorage.setItem(this.tokenKey, accessToken)));
   }
 

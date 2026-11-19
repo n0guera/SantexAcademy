@@ -9,6 +9,7 @@
       <button class="btn btn-outline-primary" type="button" [disabled]="isDownloading" (click)="downloadCsv()">
         {{ isDownloading ? 'Descargando...' : 'Descargar CSV' }}
       </button>
+      <button class="btn btn-outline-danger" type="button" (click)="logout()">Cerrar sesión</button>
     </div>
   </div>
 
