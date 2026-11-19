@@ -1,0 +1,221 @@
+{
+  "info": {
+    "_postman_id": "b0de907b-48ae-42ca-90e5-920578d0f646",
+    "name": "XAcademy - Football API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "45490603",
+    "_collection_link": "https://go.postman.co/collection/45490603-b0de907b-48ae-42ca-90e5-920578d0f646?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\nif (response.accessToken) {\r\n  pm.collectionVariables.set(\"accessToken\", response.accessToken);\r\n}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"usuario@prueba.com\",\r\n    \"password\": \"prueba123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Registro",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"nuevo@prueba.com\",\r\n    \"password\": \"prueba123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Listado de jugadores",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/players",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "players"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Detalle por ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/players/:id",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "players",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Crear jugador",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Bruno Santiago Noguera\",\r\n    \"club\": \"Boca Juniors\",\r\n    \"position\": \"CDM\",\r\n    \"nationality\": \"Argentina\",\r\n    \"rating\": 87,\r\n    \"speed\": 75,\r\n    \"shooting\": 84,\r\n    \"passing\": 87,\r\n    \"dribbling\": 89,\r\n    \"physic\": 68\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/players",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "players"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Editar jugador",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Lionel Messi\",\r\n    \"club\": \"Inter Miami\",\r\n    \"position\": \"RW\",\r\n    \"nationality\": \"Argentina\",\r\n    \"rating\": 93,\r\n    \"speed\": 85,\r\n    \"shooting\": 92,\r\n    \"passing\": 95,\r\n    \"dribbling\": 96,\r\n    \"physic\": 68\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/players/:id",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "players",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "15000"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Descargar CSV",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/players/export",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "players",
+            "export"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    }
+  ]
+}
